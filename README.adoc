@@ -1,0 +1,74 @@
+= Cloud Scheduler Demo
+
+The purpose of this sample is to show how Spring Cloud Scheduler provides a
+simple and consistent way to manage schedules on various cloud platforms.
+This demo utilizes Spring Cloud Scheduler Cloud Foundry 1.0.0.RELEASE
+and a under construction Spring Cloud Scheduler Kubernetes implementation
+provided by Chris Shaefer.
+
+The primary features this demo wishes to show are:
+
+* Schedule an app (pulled from repository)
+* Unschedule the app
+* List the available schedules
+
+== Building the application
+Since the application relies on components (for the Kubernetes implementation)
+that are not available in Maven Central they will have to be pulled down from
+github and built prior to building this demo.
+
+```
+# go to a clean directory
+git clone --single-branch -b cronv1b1 git@github.com:chrisjs/kubernetes-client.git
+cd kubernetes-client
+mvn clean install
+
+# go to a clean directory
+git clone --single-branch -b gh_1 git@github.com:chrisjs/spring-cloud-scheduler-kubernetes.git
+cd spring-cloud-scheduler-kubernetes
+mvn clean install
+
+# go to a clean directory
+git clone git@github.com:cppwfs/cloudscheduledemo.git
+cd cloudscheduledemo
+mvn clean package
+```
+
+== Running the application
+
+=== Setting up the envirionment
+From the cloudscheduledemo directory you will first need to establish which profile you wish to use, either: Cloud Foundry or Kubernetes
+
+* Cloud Foundry
+** export spring_profiles_active=cf
+** export spring_cloud_deployer_cloudfoundry_space=<your space>
+** export spring_cloud_deployer_cloudfoundry_org=<your org>
+** export spring_cloud_deployer_cloudfoundry_username=<your user name>
+** export spring_cloud_deployer_cloudfoundry_password=<your password>
+** export spring_cloud_deployer_cloudfoundry_url=<your cf url>
+** # usually something like this: https://scheduler.<yourenv>.cf-app.com
+** export spring_cloud_scheduler_cloudfoundry_schedulerUrl=<url to your scheduler>
+** export spring_cloud_deployer_cloudfoundry_skipSslValidation=true
+** export spring_cloud_deployer_cloudfoundry_task_services=<scheduler service name>
+** export spring_cloud_dataflow_features_schedulesEnabled=true
+** export spring_cloud_deployer_cloudfoundry_services=<scheduler service name>
+** export SPRING_APPLICATION_JSON="{\"maven\": { \"remote-repositories\": { \"repo1\": { \"url\": \"https://repo.spring.io/libs-release\"} } } }"
+
+* Kubernetes
+** export spring_profiles_active=kubernetes
+** defaults to minikube
+
+=== Executing the application
+The application supports scheduling, unscheduling and the default listing schedules.
+
+==== Listing
+   java -jar target/scheduler-0.0.1-SNAPSHOT.jar
+
+==== Scheduling
+   java -jar target/scheduler-0.0.1-SNAPSHOT.jar --command=schedule --scheduleName=ajug1 --expression="42 17 ? * *"
+
+==== Unscheduling
+   java -jar target/scheduler-0.0.1-SNAPSHOT.jar --command=unschedule --scheduleName=ajug1
+
+
+
