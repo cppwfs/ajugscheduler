@@ -52,7 +52,7 @@ public class KScheduleConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	@Profile("kubernetes")
-	public Resource getMavenResource() {
+	public Resource getDockerResource() {
 		return new DockerResource("springcloud/spring-cloud-scheduler-spi-test-app:latest");
 	}
 

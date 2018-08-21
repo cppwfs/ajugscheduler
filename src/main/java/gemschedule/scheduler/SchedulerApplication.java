@@ -103,13 +103,13 @@ public class SchedulerApplication {
 	}
 
 	/**
-	 * Create definition with definition name and the command line args for the application.
+	 * Create definition with appName name and the command line args for the application.
 	 *
-	 * @param definitionName
+	 * @param appName
 	 * @return
 	 */
-	private AppDefinition getAppDefinition(String definitionName) {
-		return new AppDefinition(definitionName, new HashMap<String, String>());
+	private AppDefinition getAppDefinition(String appName) {
+		return new AppDefinition(appName, Collections.EMPTY_MAP);
 	}
 
 }
